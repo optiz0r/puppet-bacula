@@ -104,6 +104,17 @@ class bacula::params {
       $bacula_user              = '_bacula'
       $bacula_group             = '_bacula'
     }
+    'Darwin': {
+      $bacula_client_packages   = 'bacula'
+      $bacula_client_services   = 'org.macports.bacula'
+      $conf_dir                 = '/opt/local/etc/bacula'
+      $bacula_dir               = '/opt/local/etc/bacula/ssl'
+      $client_config            = '/opt/local/etc/bacula/bacula-fd.conf'
+      $rundir                   = '/var/run'
+      $homedir                  = '/opt/local/var/bacula'
+      $bacula_user              = 'root'
+      $bacula_group             = '0'
+    }
     default: { fail("bacula::params has no love for ${::operatingsystem}") }
   }
 

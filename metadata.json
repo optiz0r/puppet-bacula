@@ -61,6 +61,12 @@
         "5.6",
         "5.7"
       ]
+    },
+    {
+      "operatingsystem": "Darwin",
+      "operatingsystemrelease": [
+        "14.3.0"
+      ]
     }
   ]
 }
