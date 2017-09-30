@@ -1,0 +1,33 @@
+Autochanger {
+    Name            = <%= @device_name %>
+<% @device_count.times do |index| -%>
+    Device          = <%= @device_name %>-drive-<%= index %>
+<% end -%>
+    Changer Device  = /dev/null
+    Changer Command = /dev/null
+}
+
+<% @device_count.times do |index| -%>
+Device {
+    Name           = <%= @device_name %>-drive-<%= index %>
+    Drive Index    = <%= index %>
+    Archive Device = <%= @device %>
+    Device Type    = <%= @device_type %>
+    Media Type     = <%= @media_type %>
+    LabelMedia     = <%= @label_media     ? 'yes' : 'no' %>; # lets Bacula label unlabeled media
+    Random Access  = <%= @random_access   ? 'yes' : 'no' %>;
+    Requires Mount = <%= @requires_mount  ? 'yes' : 'no' %>;
+    AutomaticMount = <%= @automatic_mount ? 'yes' : 'no' %>;
+    RemovableMedia = <%= @removable_media ? 'yes' : 'no' %>;
+    AlwaysOpen     = <%= @always_open     ? 'yes' : 'no' %>;
+    Maximum Concurrent Jobs = <%= @maxconcurjobs %>
+    Maximum Changer Wait    = <%= @max_changer_wait %>
+<% if index == 0 && @device_count > 1 && @reserve_first -%>
+    # Reserve the first device for manual operations
+    Autoselect     = no
+<% else -%>
+    Autoselect     = yes
+<% end -%>
+}
+<% end -%>
+

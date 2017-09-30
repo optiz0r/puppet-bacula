@@ -13,6 +13,7 @@
 # @param device_name   Bacula director configuration for Storage option 'Device'
 # @param media_type    Bacula director configuration for Storage option 'Media Type'
 # @param maxconcurjobs Bacula director configuration for Storage option 'Maximum Concurrent Jobs'
+# @param autochanger   Bacula director configuration for Storage option 'Autochanger'
 # @param conf_dir      Bacula configuration directory
 #
 define bacula::director::storage (
@@ -22,6 +23,7 @@ define bacula::director::storage (
   String  $device_name   = "${facts['networking']['fqdn']}-device",
   String  $media_type    = 'File',
   Integer $maxconcurjobs = 1,
+  Boolean $autochanger   = false,
   String  $conf_dir      = $bacula::conf_dir,
 ) {
   $epp_storage_variables = {
@@ -32,6 +34,7 @@ define bacula::director::storage (
     device_name   => $device_name,
     media_type    => $media_type,
     maxconcurjobs => $maxconcurjobs,
+    autochanger   => $autochanger
   }
 
   concat::fragment { "bacula-director-storage-${name}":

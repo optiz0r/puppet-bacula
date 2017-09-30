@@ -7,6 +7,7 @@
     String $device_name,
     String $media_type,
     Integer $maxconcurjobs,
+    Boolean $autochanger,
   |
 -%>
 Storage {
@@ -17,6 +18,7 @@ Storage {
     Device     = <%= $device_name %>
     Media Type = <%= $media_type %>
     Maximum Concurrent Jobs = <%= $maxconcurjobs %>
+    Autochanger = <%= if $autochanger { 'yes' } else { 'no' } %>
 <%= epp('bacula/_tls_client.epp') -%>
 }
 
