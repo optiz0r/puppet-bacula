@@ -54,6 +54,7 @@ class bacula::director (
   $port                       = '9101',
   $rundir                     = $bacula::rundir,
   $storage_name               = $bacula::storage_name,
+  $reload_command             = 'service bacula-dir reload',
 ) inherits ::bacula {
 
   include ::bacula::director::defaults
@@ -81,7 +82,24 @@ class bacula::director (
   service { $services:
     ensure  => running,
     enable  => true,
-    require => Package[$package_names],
+    require => [
+      Package[$package_names],
+      Exec['bacula-dir-configtest'],
+    ],
+  }
+
+  exec { 'bacula-dir-configtest':
+    path        => $bacula::path,
+    command     => "bacula-dir -t -c ${conf_dir}/bacula-dir.conf",
+    refreshonly => true,
+    notify      => Exec['bacula-dir-reload'],
+  }
+
+  exec { 'bacula-dir-reload':
+    path        => $bacula::path,
+    command     => $reload_command,
+    refreshonly => true,
+    require     => Service[$services],
   }
 
   if $::bacula::use_ssl == true {
@@ -107,7 +125,7 @@ class bacula::director (
     owner  => 'root',
     group  => $group,
     mode   => '0640',
-    notify => Service[$services],
+    notify => Exec['bacula-dir-configtest'],
   }
 
   concat::fragment { 'bacula-director-header':

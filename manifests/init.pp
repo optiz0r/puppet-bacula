@@ -37,6 +37,9 @@ class bacula (
   String $device_seltype    = 'bacula_store_t',
   Boolean $use_ssl          = false,
   Optional[String] $job_tag = undef,
+  Array[String] $path       = [
+    '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin',
+  ],
 ){
 
   if $use_ssl {
