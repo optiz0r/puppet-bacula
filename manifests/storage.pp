@@ -23,6 +23,7 @@ class bacula::storage (
   String $services,
   Array $packages,
   $conf_dir       = $bacula::conf_dir,
+  $manage_device  = true,
   $device         = '/bacula',
   $device_mode    = '0770',
   $device_name    = "${trusted['certname']}-device",
@@ -74,8 +75,10 @@ class bacula::storage (
     content => template('bacula/bacula-sd-header.erb'),
   }
 
-  bacula::storage::device { $device_name:
-    device => $device,
+  if $manage_device {
+    bacula::storage::device { $device_name:
+      device => $device,
+    }
   }
 
   concat::fragment { 'bacula-storage-dir':
