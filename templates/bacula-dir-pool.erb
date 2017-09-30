@@ -2,6 +2,12 @@ Pool {
     Name                 = <%= @name %>
     Pool Type            = <%= @pooltype %>
     Recycle              = <%= @recycle %>
+<% if @recycle_pool -%>
+    Recycle Pool         = <%= @recycle_pool %>
+<% end -%>
+<% if @scratch_pool -%>
+    Scratch Pool         = <%= @scratch_pool %>
+<% end -%>
     AutoPrune            = <%= @autoprune %>
 <% if @volret -%>
     Volume Retention     = <%= @volret %>
