@@ -42,9 +42,18 @@ class bacula::client (
   $conf_dir = $::bacula::conf_dir
   $config_file = "${conf_dir}/bacula-fd.conf"
 
-  package { $packages:
-    ensure => present,
+  # Packages are virtual due to some platforms shipping the
+  # SD Dir and client as part of the same package.
+  include ::bacula::virtual
+
+  # Allow for package names to include EPP syntax for db_type
+  $db_type = lookup('bacula::director::db_type')
+  $package_names = [$packages].map |$p| {
+    $package_name = inline_epp($p, {
+      'db_type' => $db_type
+    })
   }
+  realize(Package[$package_names])
 
   service { $services:
     ensure  => running,
