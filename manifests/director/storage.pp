@@ -18,7 +18,8 @@ define bacula::director::storage (
   $device_name   = "${::fqdn}-device",
   $media_type    = 'File',
   $maxconcurjobs = '1',
-  $conf_dir      = $::bacula::conf_dir
+  $conf_dir      = $::bacula::conf_dir,
+  $autochanger   = false,
 ) {
 
   concat::fragment { "bacula-director-storage-${name}":

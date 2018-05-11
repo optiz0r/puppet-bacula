@@ -65,6 +65,7 @@ define bacula::storage::autochanger_device (
     password      => $bacula::storage::password,
     device_name   => $device_name,
     media_type    => $media_type,
+    autochanger   => true,
     maxconcurjobs => $maxconcurjobs,
     tag           => "bacula-${bacula::storage::director_name}",
   }
