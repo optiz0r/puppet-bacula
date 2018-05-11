@@ -20,6 +20,9 @@
 # @param director_name
 # @param group
 # @param reserve_first   - Whether to reserve the first autochanger device for manual operations
+# @param changer_device  - Device node for the changer
+# @param changer_cmd     - Command to interact with the changer device
+# @param max_file_size   - Bacula SD configuration for Device option 'Maximum File Size'
 #
 define bacula::storage::autochanger_device (
   $device_name      = $name,
@@ -42,6 +45,9 @@ define bacula::storage::autochanger_device (
   $director_name    = $bacula::director_name,
   $group            = $bacula::bacula_group,
   $reserve_first    = false,
+  $changer_device   = '/dev/null',
+  $changer_cmd      = '/dev/null',
+  $max_file_size    = false,
 ) {
 
   concat::fragment { "bacula-storage-autochanger-device-${name}":

@@ -3,15 +3,19 @@ Autochanger {
 <% @device_count.times do |index| -%>
     Device          = <%= @device_name %>-drive-<%= index %>
 <% end -%>
-    Changer Device  = /dev/null
-    Changer Command = /dev/null
+    Changer Device  = "<%= @changer_device %>"
+    Changer Command = "<%= @changer_cmd %>"
 }
 
 <% @device_count.times do |index| -%>
 Device {
     Name           = <%= @device_name %>-drive-<%= index %>
     Drive Index    = <%= index %>
+<% if @device.kind_of?(Array) -%>
+    Archive Device = "<%= @device[index] %>"
+<% else -%>
     Archive Device = <%= @device %>
+<% end -%>
     Device Type    = <%= @device_type %>
     Media Type     = <%= @media_type %>
     LabelMedia     = <%= @label_media     ? 'yes' : 'no' %>; # lets Bacula label unlabeled media
@@ -22,6 +26,9 @@ Device {
     AlwaysOpen     = <%= @always_open     ? 'yes' : 'no' %>;
     Maximum Concurrent Jobs = <%= @maxconcurjobs %>
     Maximum Changer Wait    = <%= @max_changer_wait %>
+<% if @max_file_size -%>
+    Maximum File Size = <%= @max_file_size %>
+<% end -%>
 <% if index == 0 && @device_count > 1 && @reserve_first -%>
     # Reserve the first device for manual operations
     Autoselect     = no
