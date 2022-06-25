@@ -16,6 +16,8 @@
 # @param autoprune      Bacula pool configuration option "AutoPrune"
 # @param purgeaction    Bacula pool configuration option "Action On Purge"
 # @param next_pool      Bacula pool configuration option "Next Pool"
+# @param scratch_pool   Bacula pool configuration option "Scratch Pool"
+# @param recycle_pool   Bacula pool configuration option "Recycle Pool"
 # @param conf_dir       The path to the bacula configuration directory
 #
 # @example
@@ -41,6 +43,8 @@ define bacula::director::pool (
   Bacula::Yesno                     $autoprune      = true,
   String                            $purgeaction    = 'Truncate',
   Optional[String]                  $next_pool      = undef,
+  Optional[String]                  $scratch_pool   = undef,
+  Optional[String]                  $recycle_pool   = undef,
   String                            $conf_dir       = $bacula::conf_dir,
 ) {
   $epp_pool_variables = {
@@ -57,6 +61,8 @@ define bacula::director::pool (
     storage        => $storage,
     purgeaction    => $purgeaction,
     next_pool      => $next_pool,
+    scratch_pool   => $scratch_pool,
+    recycle_pool   => $recycle_pool,
   }
 
   concat::fragment { "bacula-director-pool-${name}":

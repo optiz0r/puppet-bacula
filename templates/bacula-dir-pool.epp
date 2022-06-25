@@ -13,6 +13,7 @@
     Optional[String] $storage,
     String $purgeaction,
     Optional[String] $next_pool,
+    Optional[String] $recycle_pool,
   |
 -%>
 Pool {
@@ -44,6 +45,12 @@ Pool {
     Action On Purge      = <%= $purgeaction %>
 <% if $next_pool { -%>
     Next Pool            = <%= $next_pool %>
+<% } -%>
+<% if $scratch_pool { -%>
+    Scratch Pool         = <%= $scratch_pool %>
+<% } -%>
+<% if $recycle_pool { -%>
+    Recycle Pool         = <%= $recycle_pool %>
 <% } -%>
 }
 
