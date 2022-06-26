@@ -44,6 +44,7 @@ class bacula::storage (
   String              $storage        = $trusted['certname'], # storage here is not storage_name
   String              $address        = $facts['networking']['fqdn'],
   String              $user           = $bacula::bacula_user,
+  Boolean             $manage_device  = true,
 ) inherits bacula {
   # Allow for package names to include EPP syntax for db_type
   $package_names = $packages.map |$p| {
@@ -67,9 +68,11 @@ class bacula::storage (
     content => epp('bacula/bacula-sd-header.epp'),
   }
 
-  bacula::storage::device { $device_name:
-    device        => $device,
-    maxconcurjobs => $maxconcurjobs,
+  if $manage_device {
+    bacula::storage::device { $device_name:
+      device        => $device,
+      maxconcurjobs => $maxconcurjobs,
+    }
   }
 
   concat::fragment { 'bacula-storage-dir':
@@ -95,13 +98,15 @@ class bacula::storage (
     notify    => Service[$services],
   }
 
-  @@bacula::director::storage { $storage:
-    address       => $address,
-    port          => $port,
-    password      => $password,
-    device_name   => $device_name,
-    media_type    => $media_type,
-    maxconcurjobs => $maxconcurjobs,
-    tag           => "bacula-${director_name}",
+  if $manage_device {
+    @@bacula::director::storage { $storage:
+      address       => $address,
+      port          => $port,
+      password      => $password,
+      device_name   => $device_name,
+      media_type    => $media_type,
+      maxconcurjobs => $maxconcurjobs,
+      tag           => "bacula-${director_name}",
+    }
   }
 }
