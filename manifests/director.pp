@@ -25,6 +25,8 @@
 # @param rundir              Bacula Director option for 'Pid Directory'
 # @param storage_name        The Name of the Storage daemon
 # @param make_bacula_tables  Path to the script that loads the database schema
+# @param config_test_cmd     Command to validate the director config before restarting
+# @param service_restart_cmd Command to restart/reload the director srevice
 #
 # @example
 #   class { 'bacula::director':
@@ -57,6 +59,8 @@ class bacula::director (
   String                        $rundir              = $bacula::rundir,
   String                        $storage_name        = $bacula::storage_name,
   String                        $make_bacula_tables  = '',
+  String                        $config_test_cmd     = '/bin/true',
+  Optional[String]              $service_restart_cmd = undef,
 ) inherits bacula {
   if $manage_defaults {
     include bacula::director::defaults
@@ -86,10 +90,19 @@ class bacula::director (
   }
   ensure_packages($package_names)
 
+
+  exec {
+    'director-config-test':
+      command     => $config_test_cmd,
+      refreshonly => true,
+      notify      => Service[$services];
+  }
+
   service { $services:
     ensure  => running,
     enable  => true,
     require => Package[$package_names],
+    restart => $service_restart_cmd,
   }
 
   file { "${conf_dir}/conf.d":
@@ -108,7 +121,10 @@ class bacula::director (
     owner  => 'root',
     group  => $group,
     mode   => '0640',
-    notify => Service[$services],
+    notify => [
+      Exec['director-config-test'],
+      Service[$services],
+    ],
   }
 
   concat::fragment { 'bacula-director-header':
